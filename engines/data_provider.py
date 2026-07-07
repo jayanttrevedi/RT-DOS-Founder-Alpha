@@ -1,7 +1,7 @@
 """
 RT-DOS Founder Alpha
 Data Provider
-Version : 0.2.1
+Version : 0.3.0
 """
 
 import yfinance as yf
@@ -22,12 +22,13 @@ class DataProvider:
         ticker_symbol = self.SYMBOL_MAP.get(symbol, symbol)
 
         try:
+
             ticker = yf.Ticker(ticker_symbol)
 
-            history = ticker.history(period="5d")
+            history = ticker.history(period="60d", interval="1d")
 
             if history.empty:
-                raise ValueError("No market data returned")
+                raise Exception("No Data")
 
             latest = history.iloc[-1]
 
@@ -39,6 +40,7 @@ class DataProvider:
                 "low": float(latest["Low"]),
                 "close": float(latest["Close"]),
                 "volume": int(latest["Volume"]),
+                "history": history,
             }
 
         except Exception:
@@ -51,4 +53,5 @@ class DataProvider:
                 "low": 0.0,
                 "close": 0.0,
                 "volume": 0,
+                "history": None,
             }
