@@ -1,17 +1,17 @@
 """
 RT-DOS Founder Alpha
-Version 0.1.0
 """
 
+from config.settings import APP_NAME, APP_VERSION
 from engines.market_data_engine import MarketDataEngine
-from config.settings import PROJECT_NAME, VERSION
 
 print("=" * 60)
-print(PROJECT_NAME)
-print(f"Version : {VERSION}")
+print(APP_NAME)
+print(f"Version : {APP_VERSION}")
 print("=" * 60)
 
 print("Loading Configuration .......... OK")
+
 engine = MarketDataEngine()
 
 result = engine.load()

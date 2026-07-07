@@ -1,15 +1,9 @@
 """
 RT-DOS Founder Alpha
-Configuration Settings
-Version : 0.1.0
+Global Configuration
 """
 
-PROJECT_NAME = "RT-DOS Founder Alpha"
-
-VERSION = "0.1.0"
-
-AUTHOR = "Jayant Trivedi"
-
-MARKET = "NSE"
+APP_NAME = "RT-DOS Founder Alpha"
+APP_VERSION = "0.4.0"
 
 DEFAULT_WATCHLIST = ["NIFTY", "BANKNIFTY", "FINNIFTY", "MIDCPNIFTY"]
