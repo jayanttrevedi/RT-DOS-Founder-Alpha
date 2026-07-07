@@ -1,10 +1,17 @@
 """
 RT-DOS Founder Alpha
 Global Configuration
-Version : 0.9.0
+Version : 1.1.0
 """
 
 APP_NAME = "RT-DOS Founder Alpha"
-APP_VERSION = "0.9.0"
+APP_VERSION = "1.2.0"
+
+EMA_FAST = 20
+EMA_MEDIUM = 50
+EMA_LONG = 200
+
+RSI_PERIOD = 14
+ATR_PERIOD = 14
 
 DEFAULT_WATCHLIST = ["NIFTY", "BANKNIFTY", "FINNIFTY", "MIDCPNIFTY", "RELIANCE"]
