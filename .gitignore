@@ -1,6 +1,10 @@
 # Python cache
 __pycache__/
 *.py[cod]
+*$py.class
+
+# C extensions
+*.so
 
 # Virtual environments
 .venv/
@@ -11,6 +15,11 @@ venv/
 
 # Logs
 logs/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
 
 # OS files
 .DS_Store
