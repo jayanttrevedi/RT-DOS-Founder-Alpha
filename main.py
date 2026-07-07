@@ -19,6 +19,7 @@ result = engine.load()
 if result["status"]:
     print(f'{result["engine"]} ............. OK')
     print(result["message"])
+    print(f'Total Symbols : {len(result["watchlist"])}')
 else:
     print("Market Data Engine Failed")
 
