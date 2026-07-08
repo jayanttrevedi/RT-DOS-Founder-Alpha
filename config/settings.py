@@ -5,8 +5,7 @@ Version : 1.1.0
 """
 
 APP_NAME = "RT-DOS Founder Alpha"
-APP_VERSION = "1.3.0"
-
+APP_VERSION = "1.8.0"
 EMA_FAST = 20
 EMA_MEDIUM = 50
 EMA_LONG = 200

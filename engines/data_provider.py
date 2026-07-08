@@ -43,7 +43,9 @@ class DataProvider:
                 "history": history,
             }
 
-        except Exception:
+        except Exception as e:
+
+    print(f"Data Error : {symbol} -> {e}")
 
             return {
                 "symbol": symbol,

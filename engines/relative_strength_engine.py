@@ -1,7 +1,7 @@
 """
 RT-DOS Founder Alpha
 Relative Strength Intelligence Engine
-Version : 1.3.0
+Version : 1.4.0
 """
 
 
@@ -13,7 +13,6 @@ class RelativeStrengthEngine:
 
         benchmark = None
 
-        # Find NIFTY
         for item in market_data:
             if item["symbol"] == "NIFTY":
                 benchmark = item
@@ -22,7 +21,13 @@ class RelativeStrengthEngine:
         if benchmark is None:
             return results
 
-        benchmark_history = benchmark["history"]
+        benchmark_history = benchmark.get("history")
+
+        if benchmark_history is None:
+            return results
+
+        if len(benchmark_history) < 20:
+            return results
 
         benchmark_return = (
             (benchmark_history["Close"].iloc[-1] - benchmark_history["Close"].iloc[-20])
@@ -31,9 +36,12 @@ class RelativeStrengthEngine:
 
         for item in market_data:
 
-            history = item["history"]
+            history = item.get("history")
 
             if history is None:
+                continue
+
+            if len(history) < 20:
                 continue
 
             asset_return = (
@@ -45,13 +53,10 @@ class RelativeStrengthEngine:
 
             if relative_strength >= 5:
                 strength = "LEADER"
-
             elif relative_strength >= 2:
                 strength = "STRONG"
-
             elif relative_strength >= -2:
                 strength = "NEUTRAL"
-
             else:
                 strength = "WEAK"
 

@@ -1,6 +1,6 @@
 """
 RT-DOS Founder Alpha
-Version : 1.3.0
+Version : 1.7.0
 """
 
 from config.settings import APP_NAME, APP_VERSION
@@ -12,89 +12,79 @@ from engines.momentum_engine import MomentumEngine
 from engines.atr_engine import ATREngine
 from engines.volume_engine import VolumeEngine
 from engines.relative_strength_engine import RelativeStrengthEngine
+from engines.composite_engine import CompositeEngine
+from engines.decision_engine import DecisionEngine
+from engines.explainability_engine import ExplainabilityEngine
 
-print("=" * 60)
-print(APP_NAME)
-print(f"Version : {APP_VERSION}")
-print("=" * 60)
+from reports.report_engine import ReportEngine
 
-print("Loading Configuration .......... OK")
 
-market_engine = MarketDataEngine()
+def main():
 
-result = market_engine.load()
+    print("=" * 60)
+    print(APP_NAME)
+    print(f"Version : {APP_VERSION}")
+    print("=" * 60)
 
-if result["status"]:
+    print("Loading Configuration .......... OK")
+
+    market_engine = MarketDataEngine()
+
+    result = market_engine.load()
+
+    if not result["status"]:
+        print("Market Data Engine Failed")
+        return
 
     print(f"{result['engine']} ............. OK")
     print(result["message"])
     print(f"Total Symbols : {len(result['watchlist'])}")
 
-    technical_engine = TechnicalEngine()
-    technical = technical_engine.analyze(result["market_data"])
+    # -----------------------------
+    # Intelligence Layer
+    # -----------------------------
 
-    scoring_engine = ScoringEngine()
-    scored = scoring_engine.calculate(technical)
+    technical = TechnicalEngine().analyze(result["market_data"])
 
-    momentum_engine = MomentumEngine()
-    momentum = momentum_engine.analyze(result["market_data"])
+    scored = ScoringEngine().calculate(technical)
 
-    atr_engine = ATREngine()
-    atr_data = atr_engine.analyze(result["market_data"])
+    momentum = MomentumEngine().analyze(result["market_data"])
 
-    volume_engine = VolumeEngine()
-    volume_data = volume_engine.analyze(result["market_data"])
+    atr = ATREngine().analyze(result["market_data"])
 
-    rs_engine = RelativeStrengthEngine()
-    rs_data = rs_engine.analyze(result["market_data"])
+    volume = VolumeEngine().analyze(result["market_data"])
 
-    momentum_map = {item["symbol"]: item for item in momentum}
-    atr_map = {item["symbol"]: item for item in atr_data}
-    volume_map = {item["symbol"]: item for item in volume_data}
-    rs_map = {item["symbol"]: item for item in rs_data}
+    relative_strength = RelativeStrengthEngine().analyze(result["market_data"])
 
-    print()
-    print("=" * 250)
-    print("RT-DOS FOUNDER ALPHA - MARKET INTELLIGENCE ENGINE")
-    print("=" * 250)
+    # -----------------------------
+    # Composite Intelligence
+    # -----------------------------
 
-    print(
-        f"{'SYMBOL':12}"
-        f"{'LTP':12}"
-        f"{'TREND':8}"
-        f"{'RSI':10}"
-        f"{'ATR':12}"
-        f"{'VOL R':10}"
-        f"{'RS %':10}"
-        f"{'RS CLASS':15}"
-        f"{'MOMENTUM':15}"
-        f"{'VOL INTEL':15}"
+    composite = CompositeEngine().calculate(
+        scored, momentum, atr, volume, relative_strength
     )
 
-    print("-" * 250)
+    # -----------------------------
+    # Decision Intelligence
+    # -----------------------------
 
-    for item in scored:
+    decisions = DecisionEngine().analyze(composite)
 
-        m = momentum_map[item["symbol"]]
-        a = atr_map[item["symbol"]]
-        v = volume_map[item["symbol"]]
-        r = rs_map[item["symbol"]]
+    # -----------------------------
+    # Explainable Intelligence
+    # -----------------------------
 
-        print(
-            f"{item['symbol']:12}"
-            f"{item['ltp']:12.2f}"
-            f"{item['score']:8}"
-            f"{m['rsi']:10.2f}"
-            f"{a['atr']:12.2f}"
-            f"{v['volume_ratio']:10.2f}"
-            f"{r['relative_strength']:10.2f}"
-            f"{r['strength']:15}"
-            f"{m['momentum']:15}"
-            f"{v['volume_strength']:15}"
-        )
+    explanations = ExplainabilityEngine().generate(decisions)
 
-else:
-    print("Market Data Engine Failed")
+    # -----------------------------
+    # Executive Report
+    # -----------------------------
 
-print()
-print("SYSTEM STATUS : READY")
+    ReportEngine().display(explanations)
+
+    print()
+    print("SYSTEM STATUS : READY")
+
+
+if __name__ == "__main__":
+    main()
