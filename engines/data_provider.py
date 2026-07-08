@@ -1,7 +1,7 @@
 """
 RT-DOS Founder Alpha
 Data Provider
-Version : 0.3.0
+Version : 0.5.0
 """
 
 import yfinance as yf
@@ -9,26 +9,40 @@ import yfinance as yf
 
 class DataProvider:
 
-    SYMBOL_MAP = {
+    INDEX_SYMBOLS = {
         "NIFTY": "^NSEI",
         "BANKNIFTY": "^NSEBANK",
         "FINNIFTY": "NIFTY_FIN_SERVICE.NS",
         "MIDCPNIFTY": "^NSEMDCP50",
-        "RELIANCE": "RELIANCE.NS",
     }
 
     def get_market_data(self, symbol):
 
-        ticker_symbol = self.SYMBOL_MAP.get(symbol, symbol)
+        # -----------------------------
+        # Resolve Yahoo Finance Symbol
+        # -----------------------------
+
+        if symbol in self.INDEX_SYMBOLS:
+
+            ticker_symbol = self.INDEX_SYMBOLS[symbol]
+
+        else:
+
+            # Automatically map NSE stocks
+            ticker_symbol = f"{symbol}.NS"
 
         try:
 
             ticker = yf.Ticker(ticker_symbol)
 
-            history = ticker.history(period="60d", interval="1d")
+            history = ticker.history(
+                period="60d",
+                interval="1d",
+                auto_adjust=False,
+            )
 
             if history.empty:
-                raise Exception("No Data")
+                raise ValueError("No market data returned")
 
             latest = history.iloc[-1]
 
@@ -45,7 +59,7 @@ class DataProvider:
 
         except Exception as e:
 
-    print(f"Data Error : {symbol} -> {e}")
+            print(f"[DataProvider] {symbol} ({ticker_symbol}) : {e}")
 
             return {
                 "symbol": symbol,

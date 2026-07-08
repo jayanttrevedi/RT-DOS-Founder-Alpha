@@ -1,7 +1,9 @@
 """
 RT-DOS Intelligence Platform
-Dashboard
-Version : 2.0.0
+Module      : Executive Workspace
+Version     : 3.0.0
+Status      : Production Candidate
+Architecture: Workspace Framework
 """
 
 import streamlit as st
@@ -15,42 +17,142 @@ class Dashboard:
 
     def show(self, presentation):
 
+        # ======================================================
+        # Header
+        # ======================================================
+
         st.title("📈 RT-DOS Intelligence Platform")
 
-        st.subheader("Founder Alpha Prototype")
+        header_left, header_right = st.columns([4, 1])
 
-        st.caption("Intelligence Before Execution")
+        with header_left:
+
+            st.caption("Retail Trading Decision Operating System")
+
+        with header_right:
+
+            if presentation["generated_at"]:
+
+                st.caption(f"Updated : {presentation['generated_at']}")
 
         st.divider()
+
+        # ======================================================
+        # Executive KPI Cards
+        # ======================================================
 
         col1, col2, col3, col4, col5 = st.columns(5)
 
-        col1.metric("Assets", presentation["total_assets"])
+        with col1:
+            st.metric(
+                "Assets",
+                presentation["total_assets"],
+            )
 
-        col2.metric("Watch", presentation["watch"])
+        with col2:
+            st.metric(
+                "Watch",
+                presentation["watch"],
+            )
 
-        col3.metric("Buy", presentation["buy"])
+        with col3:
+            st.metric(
+                "Buy",
+                presentation["buy"],
+            )
 
-        col4.metric("Strong Buy", presentation["strong_buy"])
+        with col4:
+            st.metric(
+                "Strong Buy",
+                presentation["strong_buy"],
+            )
 
-        col5.metric("Avoid", presentation["avoid"])
+        with col5:
+            st.metric(
+                "Avoid",
+                presentation["avoid"],
+            )
 
         st.divider()
 
+        # ======================================================
+        # Executive Workspace
+        # ======================================================
+
         left, right = st.columns([1, 2])
+
+        # ------------------------
+        # Left
+        # ------------------------
 
         with left:
 
+            st.subheader("🟢 Market Pulse")
+
             show_market_health(presentation["market_health"])
 
+            st.metric(
+                "Market Status",
+                presentation["market_status"],
+            )
+
+        # ------------------------
+        # Right
+        # ------------------------
+
         with right:
+
+            st.subheader("🧠 Executive Intelligence")
 
             SummaryPanel().show(presentation)
 
         st.divider()
 
-        RankingPanel().show(presentation["ranked"])
+        # ======================================================
+        # Top Opportunities
+        # ======================================================
+
+        st.subheader("🏆 Top Opportunities")
+
+        cards = st.columns(5)
+
+        top = presentation.get("top_five", [])
+
+        for i in range(5):
+
+            with cards[i]:
+
+                if i < len(top):
+
+                    item = top[i]
+
+                    st.metric(
+                        label=item["symbol"],
+                        value=item["decision"],
+                        delta=f"Score : {item['score']}",
+                    )
+
+                else:
+
+                    st.empty()
 
         st.divider()
 
-        st.caption("RT-DOS Founder Alpha | Version 2.0")
+        # ======================================================
+        # Ranking
+        # ======================================================
+
+        with st.expander(
+            "📋 Complete Market Intelligence Ranking",
+            expanded=False,
+        ):
+
+            RankingPanel().show(presentation["ranked"])
+
+        st.divider()
+
+        # ======================================================
+        # Footer
+        # ======================================================
+
+        st.caption("RT-DOS Platform v3.0 | Workspace Architecture")

@@ -1,13 +1,24 @@
 """
 RT-DOS Intelligence Platform
-Presentation Layer
-Version : 2.0.0
+Module      : Presentation Engine
+Version     : 3.0.0
+Status      : Production Candidate
+Architecture: Workspace Framework
 """
+
+from datetime import datetime
 
 
 class PresentationEngine:
+    """
+    Converts Decision Engine output into presentation-ready data
+    for the RT-DOS Workspace.
+    """
 
-    def prepare(self, decisions):
+    def build(self, decisions):
+
+        if not decisions:
+            return self._empty()
 
         ranked = sorted(
             decisions,
@@ -15,28 +26,92 @@ class PresentationEngine:
             reverse=True,
         )
 
-        strong_buy = sum(1 for x in ranked if x["decision"] == "STRONG BUY")
+        total_assets = len(ranked)
 
-        buy = sum(1 for x in ranked if x["decision"] == "BUY")
+        strong_buy = sum(1 for item in ranked if item["decision"] == "STRONG BUY")
 
-        watch = sum(1 for x in ranked if x["decision"] == "WATCH")
+        buy = sum(1 for item in ranked if item["decision"] == "BUY")
 
-        hold = sum(1 for x in ranked if x["decision"] == "HOLD")
+        watch = sum(1 for item in ranked if item["decision"] == "WATCH")
 
-        avoid = sum(1 for x in ranked if x["decision"] == "AVOID")
+        hold = sum(1 for item in ranked if item["decision"] == "HOLD")
 
-        market_health = round(
-            (strong_buy * 100 + buy * 85 + watch * 60 + hold * 40) / max(len(ranked), 1)
+        avoid = sum(1 for item in ranked if item["decision"] == "AVOID")
+
+        market_health = self._market_health(
+            strong_buy,
+            buy,
+            watch,
+            total_assets,
         )
 
+        best = ranked[0]
+
         return {
-            "ranked": ranked,
+            "generated_at": datetime.now().strftime("%d-%b-%Y %H:%M:%S"),
             "market_health": market_health,
+            "market_status": self._market_status(market_health),
+            "total_assets": total_assets,
             "strong_buy": strong_buy,
             "buy": buy,
             "watch": watch,
             "hold": hold,
             "avoid": avoid,
-            "total_assets": len(ranked),
-            "top_asset": ranked[0] if ranked else None,
+            "top_opportunity": best,
+            "top_five": ranked[:5],
+            "ranked": ranked,
+        }
+
+    # -----------------------------------------------------
+
+    def _market_health(
+        self,
+        strong_buy,
+        buy,
+        watch,
+        total_assets,
+    ):
+
+        if total_assets == 0:
+            return 0
+
+        score = (strong_buy * 100 + buy * 80 + watch * 60) / total_assets
+
+        return round(score)
+
+    # -----------------------------------------------------
+
+    def _market_status(self, score):
+
+        if score >= 80:
+            return "Very Strong"
+
+        if score >= 65:
+            return "Constructive"
+
+        if score >= 50:
+            return "Neutral"
+
+        if score >= 35:
+            return "Weak"
+
+        return "Defensive"
+
+    # -----------------------------------------------------
+
+    def _empty(self):
+
+        return {
+            "generated_at": "",
+            "market_health": 0,
+            "market_status": "Unavailable",
+            "total_assets": 0,
+            "strong_buy": 0,
+            "buy": 0,
+            "watch": 0,
+            "hold": 0,
+            "avoid": 0,
+            "top_opportunity": None,
+            "top_five": [],
+            "ranked": [],
         }

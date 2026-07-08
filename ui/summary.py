@@ -1,7 +1,9 @@
 """
 RT-DOS Intelligence Platform
-Executive Summary Panel
-Version : 2.0.0
+Module      : Executive Intelligence Card
+Version     : 3.0.0
+Status      : Production Candidate
+Architecture: Workspace Framework
 """
 
 import streamlit as st
@@ -11,40 +13,72 @@ class SummaryPanel:
 
     def show(self, presentation):
 
-        top = presentation["top_asset"]
+        top = presentation.get("top_opportunity")
 
         if top is None:
-            st.warning("No market data available.")
+
+            st.info("No market intelligence available.")
+
             return
 
-        st.subheader("🧠 Executive Intelligence Summary")
+        st.subheader("🧠 Executive Intelligence")
 
-        col1, col2 = st.columns([1, 1])
+        left, right = st.columns(2)
 
-        with col1:
+        # ----------------------------------------
+        # Left Column
+        # ----------------------------------------
 
-            st.metric("Top Opportunity", top["symbol"])
+        with left:
 
-            st.metric("Decision", top["decision"])
+            st.metric(
+                "Top Opportunity",
+                top["symbol"],
+            )
 
-            st.metric("Confidence", f'{top["confidence"]}%')
+            st.metric(
+                "Decision",
+                top["decision"],
+            )
 
-        with col2:
+            st.metric(
+                "Confidence",
+                f'{top["confidence"]}%',
+            )
 
-            st.metric("Composite Score", top["score"])
+        # ----------------------------------------
+        # Right Column
+        # ----------------------------------------
 
-            st.metric("Grade", top["grade"])
+        with right:
 
-            st.metric("Risk", top["risk"])
+            st.metric(
+                "Composite Score",
+                top["score"],
+            )
+
+            st.metric(
+                "Grade",
+                top["grade"],
+            )
+
+            st.metric(
+                "Risk",
+                top["risk"],
+            )
 
         st.success(f"""
-RT-DOS analysed **{presentation['total_assets']} assets**.
+### Executive Summary
 
-Highest Ranked Asset : **{top['symbol']}**
+**Assets Analysed :** {presentation['total_assets']}
 
-Recommended Action : **{top['decision']}**
+**Market Status :** {presentation['market_status']}
 
-Confidence Level : **{top['confidence']}%**
+**Market Health :** {presentation['market_health']}%
 
-Market Health : **{presentation['market_health']}%**
+**Top Opportunity :** {top['symbol']}
+
+**Recommended Action :** {top['decision']}
+
+**Confidence :** {top['confidence']}%
 """)
