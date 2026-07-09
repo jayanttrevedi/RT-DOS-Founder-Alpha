@@ -1,8 +1,8 @@
 """
 RT-DOS Intelligence Platform
 Module      : Workspace Controller
-Version     : 3.0.0
-Status      : Production Candidate
+Version     : 3.1.0
+Status      : Production
 Architecture: Workspace Framework
 """
 
@@ -18,6 +18,7 @@ from engines.relative_strength_engine import RelativeStrengthEngine
 from engines.composite_engine import CompositeEngine
 from engines.decision_engine import DecisionEngine
 from engines.validation_engine import ValidationEngine
+from engines.consistency_engine import ConsistencyEngine
 
 from ui.theme import apply_theme
 from ui.presentation import PresentationEngine
@@ -51,25 +52,23 @@ with st.spinner("Loading RT-DOS Intelligence Platform..."):
         st.error("Market Data Engine Failed")
         st.stop()
 
-    # --------------------------------------------------
+    # ------------------------------------------------------
     # Validation
-    # --------------------------------------------------
+    # ------------------------------------------------------
 
     validation = ValidationEngine().validate(result["market_data"])
 
     if not validation["report"]["success"]:
 
         st.error("Market Data Validation Failed")
-
         st.json(validation["report"])
-
         st.stop()
 
     market_data = validation["valid_assets"]
 
-    # --------------------------------------------------
-    # Intelligence Pipeline
-    # --------------------------------------------------
+    # ------------------------------------------------------
+    # Intelligence Engines
+    # ------------------------------------------------------
 
     technical = TechnicalEngine().analyze(market_data)
 
@@ -83,6 +82,30 @@ with st.spinner("Loading RT-DOS Intelligence Platform..."):
 
     relative_strength = RelativeStrengthEngine().analyze(market_data)
 
+    # ------------------------------------------------------
+    # Consistency Validation
+    # ------------------------------------------------------
+
+    consistency = ConsistencyEngine().validate(
+        technical,
+        momentum,
+        atr,
+        volume,
+        relative_strength,
+    )
+
+    if not consistency["success"]:
+
+        st.error("Engine Consistency Validation Failed")
+
+        st.json(consistency)
+
+        st.stop()
+
+    # ------------------------------------------------------
+    # Composite Intelligence
+    # ------------------------------------------------------
+
     composite = CompositeEngine().calculate(
         scored,
         momentum,
@@ -95,7 +118,7 @@ with st.spinner("Loading RT-DOS Intelligence Platform..."):
 
 
 # ==========================================================
-# Presentation Layer
+# Presentation
 # ==========================================================
 
 presentation = PresentationEngine().build(decisions)
@@ -114,4 +137,4 @@ Dashboard().show(presentation)
 
 st.divider()
 
-st.caption("RT-DOS Platform v3.0 | Retail Trading Decision Operating System")
+st.caption("RT-DOS Platform v3.1 | Retail Trading Decision Operating System")
