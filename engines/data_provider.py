@@ -1,7 +1,7 @@
 """
 RT-DOS Founder Alpha
 Data Provider
-Version : 0.5.0
+Version : 0.6.0
 """
 
 import yfinance as yf
@@ -18,17 +18,9 @@ class DataProvider:
 
     def get_market_data(self, symbol):
 
-        # -----------------------------
-        # Resolve Yahoo Finance Symbol
-        # -----------------------------
-
         if symbol in self.INDEX_SYMBOLS:
-
             ticker_symbol = self.INDEX_SYMBOLS[symbol]
-
         else:
-
-            # Automatically map NSE stocks
             ticker_symbol = f"{symbol}.NS"
 
         try:
@@ -59,7 +51,12 @@ class DataProvider:
 
         except Exception as e:
 
-            print(f"[DataProvider] {symbol} ({ticker_symbol}) : {e}")
+            print("=" * 80)
+            print("DATA PROVIDER ERROR")
+            print(f"Symbol       : {symbol}")
+            print(f"Yahoo Symbol : {ticker_symbol}")
+            print(f"Exception    : {e}")
+            print("=" * 80)
 
             return {
                 "symbol": symbol,
