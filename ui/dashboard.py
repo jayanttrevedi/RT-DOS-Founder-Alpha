@@ -1,14 +1,15 @@
 """
 RT-DOS Intelligence Platform
 Module      : Executive Workspace
-Version     : 3.0.0
-Status      : Production Candidate
+Version     : 3.1.0
+Status      : Production
 Architecture: Workspace Framework
 """
 
 import streamlit as st
 
 from ui.market_health import show_market_health
+from ui.market_breadth import MarketBreadthWidget
 from ui.ranking import RankingPanel
 from ui.summary import SummaryPanel
 
@@ -23,16 +24,13 @@ class Dashboard:
 
         st.title("📈 RT-DOS Intelligence Platform")
 
-        header_left, header_right = st.columns([4, 1])
+        left_header, right_header = st.columns([4, 1])
 
-        with header_left:
-
+        with left_header:
             st.caption("Retail Trading Decision Operating System")
 
-        with header_right:
-
-            if presentation["generated_at"]:
-
+        with right_header:
+            if presentation.get("generated_at"):
                 st.caption(f"Updated : {presentation['generated_at']}")
 
         st.divider()
@@ -43,35 +41,30 @@ class Dashboard:
 
         col1, col2, col3, col4, col5 = st.columns(5)
 
-        with col1:
-            st.metric(
-                "Assets",
-                presentation["total_assets"],
-            )
+        col1.metric(
+            "Assets",
+            presentation["total_assets"],
+        )
 
-        with col2:
-            st.metric(
-                "Watch",
-                presentation["watch"],
-            )
+        col2.metric(
+            "Watch",
+            presentation["watch"],
+        )
 
-        with col3:
-            st.metric(
-                "Buy",
-                presentation["buy"],
-            )
+        col3.metric(
+            "Buy",
+            presentation["buy"],
+        )
 
-        with col4:
-            st.metric(
-                "Strong Buy",
-                presentation["strong_buy"],
-            )
+        col4.metric(
+            "Strong Buy",
+            presentation["strong_buy"],
+        )
 
-        with col5:
-            st.metric(
-                "Avoid",
-                presentation["avoid"],
-            )
+        col5.metric(
+            "Avoid",
+            presentation["avoid"],
+        )
 
         st.divider()
 
@@ -80,10 +73,6 @@ class Dashboard:
         # ======================================================
 
         left, right = st.columns([1, 2])
-
-        # ------------------------
-        # Left
-        # ------------------------
 
         with left:
 
@@ -96,15 +85,17 @@ class Dashboard:
                 presentation["market_status"],
             )
 
-        # ------------------------
-        # Right
-        # ------------------------
-
         with right:
 
-            st.subheader("🧠 Executive Intelligence")
-
             SummaryPanel().show(presentation)
+
+        st.divider()
+
+        # ======================================================
+        # Market Breadth
+        # ======================================================
+
+        MarketBreadthWidget().show(presentation)
 
         st.divider()
 
@@ -116,11 +107,14 @@ class Dashboard:
 
         cards = st.columns(5)
 
-        top = presentation.get("top_five", [])
+        top = presentation.get(
+            "top_five",
+            [],
+        )
 
-        for i in range(5):
+        for i, column in enumerate(cards):
 
-            with cards[i]:
+            with column:
 
                 if i < len(top):
 
@@ -132,14 +126,10 @@ class Dashboard:
                         delta=f"Score : {item['score']}",
                     )
 
-                else:
-
-                    st.empty()
-
         st.divider()
 
         # ======================================================
-        # Ranking
+        # Complete Ranking
         # ======================================================
 
         with st.expander(
@@ -155,4 +145,4 @@ class Dashboard:
         # Footer
         # ======================================================
 
-        st.caption("RT-DOS Platform v3.0 | Workspace Architecture")
+        st.caption("RT-DOS Platform v3.1 | Workspace Framework")
