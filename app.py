@@ -1,7 +1,7 @@
 """
 RT-DOS Intelligence Platform
-Module      : Workspace Controller
-Version     : 3.1.0
+Module      : Application Controller
+Version     : 4.0.0
 Status      : Production
 Architecture: Workspace Framework
 """
@@ -22,10 +22,11 @@ from engines.consistency_engine import ConsistencyEngine
 
 from ui.theme import apply_theme
 from ui.presentation import PresentationEngine
-from ui.dashboard import Dashboard
+from ui.navigation import Navigation
+from ui.workspace_router import WorkspaceRouter
 
 # ==========================================================
-# Streamlit Configuration
+# Streamlit
 # ==========================================================
 
 st.set_page_config(
@@ -36,6 +37,11 @@ st.set_page_config(
 
 apply_theme()
 
+# ==========================================================
+# Navigation
+# ==========================================================
+
+selected_workspace = Navigation().show()
 
 # ==========================================================
 # Intelligence Pipeline
@@ -52,23 +58,17 @@ with st.spinner("Loading RT-DOS Intelligence Platform..."):
         st.error("Market Data Engine Failed")
         st.stop()
 
-    # ------------------------------------------------------
-    # Validation
-    # ------------------------------------------------------
-
     validation = ValidationEngine().validate(result["market_data"])
 
     if not validation["report"]["success"]:
 
         st.error("Market Data Validation Failed")
+
         st.json(validation["report"])
+
         st.stop()
 
     market_data = validation["valid_assets"]
-
-    # ------------------------------------------------------
-    # Intelligence Engines
-    # ------------------------------------------------------
 
     technical = TechnicalEngine().analyze(market_data)
 
@@ -81,10 +81,6 @@ with st.spinner("Loading RT-DOS Intelligence Platform..."):
     volume = VolumeEngine().analyze(market_data)
 
     relative_strength = RelativeStrengthEngine().analyze(market_data)
-
-    # ------------------------------------------------------
-    # Consistency Validation
-    # ------------------------------------------------------
 
     consistency = ConsistencyEngine().validate(
         technical,
@@ -102,10 +98,6 @@ with st.spinner("Loading RT-DOS Intelligence Platform..."):
 
         st.stop()
 
-    # ------------------------------------------------------
-    # Composite Intelligence
-    # ------------------------------------------------------
-
     composite = CompositeEngine().calculate(
         scored,
         momentum,
@@ -116,20 +108,20 @@ with st.spinner("Loading RT-DOS Intelligence Platform..."):
 
     decisions = DecisionEngine().analyze(composite)
 
-
 # ==========================================================
 # Presentation
 # ==========================================================
 
 presentation = PresentationEngine().build(decisions)
 
-
 # ==========================================================
-# Workspace
+# Workspace Router
 # ==========================================================
 
-Dashboard().show(presentation)
-
+WorkspaceRouter().show(
+    selected_workspace,
+    presentation,
+)
 
 # ==========================================================
 # Footer
@@ -137,4 +129,4 @@ Dashboard().show(presentation)
 
 st.divider()
 
-st.caption("RT-DOS Platform v3.1 | Retail Trading Decision Operating System")
+st.caption("RT-DOS Founder Alpha v4.0 | Workspace Framework")
