@@ -1,7 +1,7 @@
 """
 RT-DOS Intelligence Platform
 Module      : Data Provider
-Version     : 1.0.0
+Version     : 1.0.1
 Status      : Production
 Architecture: Core Intelligence Layer
 """
@@ -14,23 +14,27 @@ import yfinance as yf
 class DataProvider:
 
     INDEX_SYMBOLS = {
-    "NIFTY": "^NSEI",
-    "BANKNIFTY": "^NSEBANK",
-    "FINNIFTY": "NIFTY_FIN_SERVICE.NS",
-    "MIDCPNIFTY": "^NSEMDCP50",
-}
+        "NIFTY": "^NSEI",
+        "BANKNIFTY": "^NSEBANK",
+        "FINNIFTY": "NIFTY_FIN_SERVICE.NS",
+        "MIDCPNIFTY": "^NSEMDCP50",
+    }
 
-ALTERNATE_SYMBOLS = {
-    "NIFTY": ["^NSEI"],
-    "BANKNIFTY": ["^NSEBANK"],
-    "FINNIFTY": [
-        "NIFTY_FIN_SERVICE.NS",
-        "^CNXFINSERVICE",
-    ],
-    "MIDCPNIFTY": [
-        "^NSEMDCP50",
-    ],
-}
+    ALTERNATE_SYMBOLS = {
+        "NIFTY": [
+            "^NSEI",
+        ],
+        "BANKNIFTY": [
+            "^NSEBANK",
+        ],
+        "FINNIFTY": [
+            "NIFTY_FIN_SERVICE.NS",
+            "^CNXFINSERVICE",
+        ],
+        "MIDCPNIFTY": [
+            "^NSEMDCP50",
+        ],
+    }
 
     def get_market_data(self, symbol):
 
@@ -52,10 +56,6 @@ ALTERNATE_SYMBOLS = {
             if history.empty:
                 raise ValueError("No market data returned")
 
-            # -------------------------------------------------
-            # Remove rows having no Close value
-            # -------------------------------------------------
-
             history = history.dropna(subset=["Close"])
 
             if history.empty:
@@ -74,7 +74,7 @@ ALTERNATE_SYMBOLS = {
 
             volume = latest["Volume"]
 
-            if volume != volume:  # NaN check
+            if volume != volume:
                 volume = 0
 
             volume = int(volume)
