@@ -9,6 +9,7 @@ Architecture: Workspace Framework
 import streamlit as st
 
 from ui.market_header import MarketHeader
+from ui.daily_brief import DailyBrief
 from ui.executive_ribbon import ExecutiveRibbon
 from ui.market_health import show_market_health
 from ui.market_breadth import MarketBreadthWidget
@@ -26,6 +27,8 @@ class Dashboard:
         # =====================================================
 
         MarketHeader().show()
+
+        DailyBrief().show(presentation)
 
         # =====================================================
         # Executive Decision Ribbon
