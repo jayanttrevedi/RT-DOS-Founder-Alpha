@@ -1,8 +1,12 @@
 """
-RT-DOS Founder Alpha
-Data Provider
-Version : 0.6.0
+RT-DOS Intelligence Platform
+Module      : Data Provider
+Version     : 1.0.0
+Status      : Production
+Architecture: Core Intelligence Layer
 """
+
+import math
 
 import yfinance as yf
 
@@ -18,10 +22,10 @@ class DataProvider:
 
     def get_market_data(self, symbol):
 
-        if symbol in self.INDEX_SYMBOLS:
-            ticker_symbol = self.INDEX_SYMBOLS[symbol]
-        else:
-            ticker_symbol = f"{symbol}.NS"
+        ticker_symbol = self.INDEX_SYMBOLS.get(
+            symbol,
+            f"{symbol}.NS",
+        )
 
         try:
 
@@ -36,16 +40,41 @@ class DataProvider:
             if history.empty:
                 raise ValueError("No market data returned")
 
+            # -------------------------------------------------
+            # Remove rows having no Close value
+            # -------------------------------------------------
+
+            history = history.dropna(subset=["Close"])
+
+            if history.empty:
+                raise ValueError("No valid closing prices found")
+
             latest = history.iloc[-1]
+
+            close = float(latest["Close"])
+
+            if math.isnan(close):
+                raise ValueError("Latest close price is NaN")
+
+            open_price = float(latest["Open"])
+            high = float(latest["High"])
+            low = float(latest["Low"])
+
+            volume = latest["Volume"]
+
+            if volume != volume:  # NaN check
+                volume = 0
+
+            volume = int(volume)
 
             return {
                 "symbol": symbol,
-                "last_price": float(latest["Close"]),
-                "open": float(latest["Open"]),
-                "high": float(latest["High"]),
-                "low": float(latest["Low"]),
-                "close": float(latest["Close"]),
-                "volume": int(latest["Volume"]),
+                "last_price": close,
+                "open": open_price,
+                "high": high,
+                "low": low,
+                "close": close,
+                "volume": volume,
                 "history": history,
             }
 
@@ -55,7 +84,7 @@ class DataProvider:
             print("DATA PROVIDER ERROR")
             print(f"Symbol       : {symbol}")
             print(f"Yahoo Symbol : {ticker_symbol}")
-            print(f"Exception    : {e}")
+            print(f"Reason       : {e}")
             print("=" * 80)
 
             return {
