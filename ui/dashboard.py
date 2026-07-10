@@ -9,6 +9,7 @@ Architecture: Workspace Framework
 import streamlit as st
 
 from engines.market_sentinel_engine import MarketSentinelEngine
+from engines.position_guardian_engine import PositionGuardianEngine
 from ui.market_header import MarketHeader
 from ui.daily_brief import DailyBrief
 from ui.executive_alerts import ExecutiveAlerts
@@ -16,6 +17,7 @@ from ui.executive_ribbon import ExecutiveRibbon
 from ui.market_health import show_market_health
 from ui.market_breadth import MarketBreadthWidget
 from ui.opportunity_radar import OpportunityRadar
+from ui.position_guardian import PositionGuardian
 from ui.summary import SummaryPanel
 from ui.ranking import RankingPanel
 
@@ -32,9 +34,16 @@ class Dashboard:
 
         sentinel = MarketSentinelEngine().analyze()
 
+        guardian = PositionGuardianEngine().analyze(
+            presentation,
+            sentinel,
+        )
+
         DailyBrief().show(presentation)
 
         ExecutiveAlerts().show(sentinel)
+
+        PositionGuardian().show(guardian)
 
         # =====================================================
         # Executive Decision Ribbon

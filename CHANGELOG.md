@@ -1,69 +1,131 @@
-# RT-DOS Intelligence Platform
+# RT-DOS Founder Alpha Changelog
 
-## CHANGELOG
+All notable changes to RT-DOS Founder Alpha are documented in this file.
 
-This document records all significant changes made to the RT-DOS Intelligence Platform.
-
-The project follows milestone-based versioning.
+The project uses semantic-version-style milestones to track major architectural and product progress.
 
 ---
 
-# v0.7.0 — Founder Alpha Milestone 2
+## 1.0.0 — Founder Alpha Foundation
 
-Release Date: 10 July 2026
+### Added
+- Initial modular application structure.
+- Core engine layer for market data, validation, and intelligence processing.
+- Streamlit-based dashboard and workspace framework.
 
-Status:
-Stable
+### Changed
+- Organized the platform around a layered architecture for data, analysis, decision, and presentation.
 
-Major Features
-
-• Intelligence Pipeline
-• Market Regime Engine
-• Institutional Confidence Engine
-• Probability Engine
-• Market Command Centre V2
-• Multi Workspace Framework
-• Opportunity Radar V3
-• Executive Ribbon
-• Status Ribbon
-• Presentation Engine
-• Validation Framework
-• Technical Analysis Pipeline
-• Composite Scoring Engine
-
-Architecture
-
-• Modular Engine Architecture
-• Workspace Framework
-• Layered Intelligence Pipeline
-• Explainable-ready Design
-
-Git
-
-Commit:
-Phase 7 - Intelligence Pipeline and Probability Engine
-
-Tag:
-v0.7.0
-
-Known Future Improvements
-
-• Explainability Engine
-• AI Commentary
-• Portfolio Workspace
-• Strategy Simulator
-• Data Provider v2
-• Portfolio Intelligence
+### Notes
+- Established the base platform for future trading intelligence expansion.
 
 ---
 
-Future Releases
+## 1.1.0 — Technical Intelligence Layer
 
-v0.8.0
-Explainable Intelligence
+### Added
+- Technical analysis engines for momentum, ATR, volume, and relative strength.
+- Indicator-based analysis foundation.
 
-v0.9.0
-Portfolio Intelligence
+### Changed
+- Introduced a more structured engine pipeline for market analysis.
 
-v1.0.0
-Founder Public Release
+---
+
+## 1.2.0 — Composite Scoring
+
+### Added
+- Composite scoring and ranking infrastructure.
+- Unified decision support output across multiple engines.
+
+### Changed
+- Moved the platform toward a more coherent intelligence synthesis model.
+
+---
+
+## 1.3.0 — Decision Intelligence
+
+### Added
+- Decision engine for converting intelligence into actionable recommendations.
+- Recommendation states such as Strong Buy, Buy, Watch, Hold, and Avoid.
+
+### Changed
+- Strengthened the connection between analytic results and user-facing outcomes.
+
+---
+
+## 1.4.0 — Market Regime and Confidence
+
+### Added
+- Market regime classification.
+- Institutional confidence estimation.
+- Probability and expectation-based market context.
+
+### Changed
+- Enhanced the executive decision framework with more refined market context.
+
+---
+
+## 1.5.0 — Presentation Engine and Workspace UI
+
+### Added
+- Presentation engine for converting analytical outputs into dashboard-ready content.
+- Workspace-based UI architecture with modular dashboards and panels.
+- Executive ribbon, summary, and ranking components.
+
+### Changed
+- Improved the separation between intelligence generation and visual presentation.
+
+---
+
+## 1.6.0 — Executive Briefing Experience
+
+### Added
+- Daily executive brief presentation components.
+- Summary and executive commentary UI surfaces.
+- Improved presentation of top opportunities and market context.
+
+### Changed
+- Elevated the dashboard from raw analytics into an executive-ready interface.
+
+---
+
+## 1.7.0 — Explainability and Reporting
+
+### Added
+- Explainability engine and reporting support.
+- Narrative-style output for recommendations and decision logic.
+
+### Changed
+- Made the platform more transparent and easier to audit.
+
+---
+
+## 1.8.0 — Event Intelligence Foundation
+
+### Added
+- Market Sentinel engine foundation.
+- Executive alerts UI component for rendering sentinel output.
+- Extensible event-intelligence scaffolding without live-news dependency.
+
+### Changed
+- Introduced a new presentation layer for event awareness and alerting.
+
+---
+
+## 1.9.0 — Planned Expansion
+
+### Planned
+- Live-data integration.
+- Improved portfolio intelligence.
+- Expansion of event and alert handling.
+- Stronger testing and operational tooling.
+
+---
+
+## 2.0.0 — Target Vision
+
+### Planned
+- Full AI-assisted decision support.
+- Portfolio and risk workspaces.
+- Broader external integrations and institutional readiness.
