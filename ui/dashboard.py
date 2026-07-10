@@ -8,8 +8,10 @@ Architecture: Workspace Framework
 
 import streamlit as st
 
+from engines.market_sentinel_engine import MarketSentinelEngine
 from ui.market_header import MarketHeader
 from ui.daily_brief import DailyBrief
+from ui.executive_alerts import ExecutiveAlerts
 from ui.executive_ribbon import ExecutiveRibbon
 from ui.market_health import show_market_health
 from ui.market_breadth import MarketBreadthWidget
@@ -28,7 +30,11 @@ class Dashboard:
 
         MarketHeader().show()
 
+        sentinel = MarketSentinelEngine().analyze()
+
         DailyBrief().show(presentation)
+
+        ExecutiveAlerts().show(sentinel)
 
         # =====================================================
         # Executive Decision Ribbon
