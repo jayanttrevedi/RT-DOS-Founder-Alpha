@@ -1,7 +1,7 @@
 """
 RT-DOS Intelligence Platform
 Module      : Market Command Centre
-Version     : 4.0.0
+Version     : 5.0.0
 Status      : Production
 Architecture: Workspace Framework
 """
@@ -9,6 +9,7 @@ Architecture: Workspace Framework
 import streamlit as st
 
 from ui.market_header import MarketHeader
+from ui.executive_ribbon import ExecutiveRibbon
 from ui.market_health import show_market_health
 from ui.market_breadth import MarketBreadthWidget
 from ui.opportunity_radar import OpportunityRadar
@@ -20,15 +21,21 @@ class Dashboard:
 
     def show(self, presentation):
 
-        # ======================================================
-        # MARKET HEADER
-        # ======================================================
+        # =====================================================
+        # Header
+        # =====================================================
 
         MarketHeader().show()
 
-        # ======================================================
-        # EXECUTIVE KPI STRIP
-        # ======================================================
+        # =====================================================
+        # Executive Decision Ribbon
+        # =====================================================
+
+        ExecutiveRibbon().show(presentation)
+
+        # =====================================================
+        # Executive KPI Strip
+        # =====================================================
 
         k1, k2, k3, k4, k5 = st.columns(5)
 
@@ -64,9 +71,9 @@ class Dashboard:
 
         st.divider()
 
-        # ======================================================
-        # COMMAND CENTRE
-        # ======================================================
+        # =====================================================
+        # Main Workspace
+        # =====================================================
 
         left, right = st.columns([1, 2])
 
@@ -95,15 +102,18 @@ class Dashboard:
 
         st.divider()
 
-        # ======================================================
-        # TOP OPPORTUNITIES
-        # ======================================================
+        # =====================================================
+        # Top Opportunities
+        # =====================================================
 
         st.subheader("🏆 Top Opportunities")
 
         cards = st.columns(5)
 
-        top = presentation.get("top_five", [])
+        top = presentation.get(
+            "top_five",
+            [],
+        )
 
         for index, card in enumerate(cards):
 
@@ -114,16 +124,16 @@ class Dashboard:
                     item = top[index]
 
                     st.metric(
-                        label=item["symbol"],
-                        value=item["decision"],
-                        delta=f"Score : {item['score']}",
+                        item["symbol"],
+                        item["decision"],
+                        delta=f"Score {item['score']}",
                     )
 
         st.divider()
 
-        # ======================================================
-        # COMPLETE RANKING
-        # ======================================================
+        # =====================================================
+        # Ranking
+        # =====================================================
 
         with st.expander(
             "📋 Complete Market Intelligence Ranking",
@@ -134,4 +144,4 @@ class Dashboard:
 
         st.divider()
 
-        st.caption("RT-DOS Founder Alpha | Market Command Centre v4.0")
+        st.caption("RT-DOS Founder Alpha | Market Command Centre V2")

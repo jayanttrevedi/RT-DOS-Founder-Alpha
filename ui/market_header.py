@@ -1,25 +1,37 @@
 """
 RT-DOS Intelligence Platform
 Module      : Market Command Centre Header
-Version     : 1.0.0
+Version     : 2.0.0
 Status      : Production
-Architecture: Workspace Framework
+Architecture: Market Command Centre V2
 """
 
-from datetime import datetime, time
+from datetime import datetime
 
 import streamlit as st
+
+from ui.status_ribbon import StatusRibbon
 
 
 class MarketHeader:
 
-    VERSION = "Founder Alpha v3.2"
+    VERSION = "Founder Alpha v4.1"
 
-    # ---------------------------------------------------------
+    # ==========================================================
 
     def show(self):
 
-        left, centre, right = st.columns([4, 2, 2])
+        # ------------------------------------------------------
+        # Executive Status Ribbon
+        # ------------------------------------------------------
+
+        StatusRibbon().show()
+
+        # ------------------------------------------------------
+        # Main Header
+        # ------------------------------------------------------
+
+        left, right = st.columns([4, 1])
 
         with left:
 
@@ -27,50 +39,13 @@ class MarketHeader:
 
             st.caption("Retail Trading Decision Operating System")
 
-        with centre:
-
-            session = self._market_session()
-
-            indicator = {
-                "PRE-OPEN": "🟡",
-                "OPEN": "🟢",
-                "CLOSED": "🔴",
-            }[session]
-
-            st.metric(
-                "Market Session",
-                f"{indicator} {session}",
-            )
-
         with right:
 
-            now = datetime.now()
-
             st.metric(
-                "Last Update",
-                now.strftime("%d-%b-%Y\n%H:%M:%S"),
+                "Date",
+                datetime.now().strftime("%d-%b-%Y"),
             )
 
-        st.caption(
-            f"RT-DOS {self.VERSION}  |  Data Source : Yahoo Finance  |  Workspace : Market Command Centre"
-        )
+        st.caption(f"RT-DOS {self.VERSION} | Workspace : Market Command Centre")
 
         st.divider()
-
-    # ---------------------------------------------------------
-
-    def _market_session(self):
-
-        now = datetime.now().time()
-
-        pre_open_start = time(9, 0)
-        market_open = time(9, 15)
-        market_close = time(15, 30)
-
-        if pre_open_start <= now < market_open:
-            return "PRE-OPEN"
-
-        if market_open <= now <= market_close:
-            return "OPEN"
-
-        return "CLOSED"
