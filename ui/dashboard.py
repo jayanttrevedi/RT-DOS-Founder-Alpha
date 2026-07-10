@@ -1,18 +1,19 @@
 """
 RT-DOS Intelligence Platform
-Module      : Executive Workspace
-Version     : 3.2.0
+Module      : Market Command Centre
+Version     : 4.0.0
 Status      : Production
 Architecture: Workspace Framework
 """
 
 import streamlit as st
 
+from ui.market_header import MarketHeader
 from ui.market_health import show_market_health
 from ui.market_breadth import MarketBreadthWidget
 from ui.opportunity_radar import OpportunityRadar
-from ui.ranking import RankingPanel
 from ui.summary import SummaryPanel
+from ui.ranking import RankingPanel
 
 
 class Dashboard:
@@ -20,45 +21,58 @@ class Dashboard:
     def show(self, presentation):
 
         # ======================================================
-        # Header
+        # MARKET HEADER
         # ======================================================
 
-        st.title("📈 RT-DOS Intelligence Platform")
+        MarketHeader().show()
 
-        header_left, header_right = st.columns([4, 1])
+        # ======================================================
+        # EXECUTIVE KPI STRIP
+        # ======================================================
 
-        with header_left:
-            st.caption("Retail Trading Decision Operating System")
+        k1, k2, k3, k4, k5 = st.columns(5)
 
-        with header_right:
-            if presentation.get("generated_at"):
-                st.caption(f"Updated : {presentation['generated_at']}")
+        with k1:
+            st.metric(
+                "Assets",
+                presentation["total_assets"],
+            )
+
+        with k2:
+            st.metric(
+                "Strong Buy",
+                presentation["strong_buy"],
+            )
+
+        with k3:
+            st.metric(
+                "Buy",
+                presentation["buy"],
+            )
+
+        with k4:
+            st.metric(
+                "Watch",
+                presentation["watch"],
+            )
+
+        with k5:
+            st.metric(
+                "Avoid",
+                presentation["avoid"],
+            )
 
         st.divider()
 
         # ======================================================
-        # Executive KPI Cards
-        # ======================================================
-
-        col1, col2, col3, col4, col5 = st.columns(5)
-
-        col1.metric("Assets", presentation["total_assets"])
-        col2.metric("Watch", presentation["watch"])
-        col3.metric("Buy", presentation["buy"])
-        col4.metric("Strong Buy", presentation["strong_buy"])
-        col5.metric("Avoid", presentation["avoid"])
-
-        st.divider()
-
-        # ======================================================
-        # Workspace
+        # COMMAND CENTRE
         # ======================================================
 
         left, right = st.columns([1, 2])
 
         with left:
 
-            st.subheader("🟢 Market Pulse")
+            st.subheader("📡 Market Pulse")
 
             show_market_health(presentation["market_health"])
 
@@ -82,7 +96,7 @@ class Dashboard:
         st.divider()
 
         # ======================================================
-        # Top Opportunities
+        # TOP OPPORTUNITIES
         # ======================================================
 
         st.subheader("🏆 Top Opportunities")
@@ -91,24 +105,24 @@ class Dashboard:
 
         top = presentation.get("top_five", [])
 
-        for i, card in enumerate(cards):
+        for index, card in enumerate(cards):
 
             with card:
 
-                if i < len(top):
+                if index < len(top):
 
-                    item = top[i]
+                    item = top[index]
 
                     st.metric(
-                        item["symbol"],
-                        item["decision"],
-                        f"Score : {item['score']}",
+                        label=item["symbol"],
+                        value=item["decision"],
+                        delta=f"Score : {item['score']}",
                     )
 
         st.divider()
 
         # ======================================================
-        # Ranking
+        # COMPLETE RANKING
         # ======================================================
 
         with st.expander(
@@ -120,4 +134,4 @@ class Dashboard:
 
         st.divider()
 
-        st.caption("RT-DOS Platform v3.2 | Executive Workspace")
+        st.caption("RT-DOS Founder Alpha | Market Command Centre v4.0")
