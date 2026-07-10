@@ -1,9 +1,9 @@
 """
 RT-DOS Intelligence Platform
 Module      : Opportunity Radar
-Version     : 1.0.0
+Version     : 3.0.0
 Status      : Production
-Architecture: Workspace Framework
+Architecture: Market Command Centre V3
 """
 
 import streamlit as st
@@ -11,47 +11,132 @@ import streamlit as st
 
 class OpportunityRadar:
 
-    def show(self, presentation):
+    # ==========================================================
+    # Public
+    # ==========================================================
 
-        st.subheader("🎯 Opportunity Radar")
+    def show(self, presentation):
 
         opportunities = presentation.get("top_five", [])
 
+        st.subheader("🎯 RT-DOS Opportunity Radar")
+
         if not opportunities:
 
-            st.info("No trading opportunities available.")
+            st.info("No opportunities available.")
+
             return
 
-        for rank, asset in enumerate(opportunities, start=1):
+        for asset in opportunities:
 
-            with st.container():
+            self._show_card(asset)
 
-                left, right = st.columns([5, 2])
+    # ==========================================================
+    # Private
+    # ==========================================================
 
-                with left:
+    def _show_card(self, asset):
 
-                    st.markdown(f"### {rank}. {asset['symbol']}")
+        symbol = asset.get("symbol", "-")
+        decision = asset.get("decision", "-")
+        score = asset.get("score", 0)
 
-                    st.write(
-                        f"**Decision:** {asset['decision']}  |  "
-                        f"**Grade:** {asset['grade']}"
-                    )
+        confidence = asset.get(
+            "institutional_confidence",
+            asset.get("confidence", 0),
+        )
 
-                with right:
+        probability = asset.get(
+            "probability",
+            0,
+        )
 
-                    st.metric(
-                        "Score",
-                        asset["score"],
-                    )
+        expected_move = asset.get(
+            "expected_move",
+            "-",
+        )
 
-                    st.metric(
-                        "Confidence",
-                        f"{asset['confidence']}%",
-                    )
+        holding = asset.get(
+            "holding_period",
+            "-",
+        )
 
-                    st.metric(
-                        "Risk",
-                        asset["risk"],
-                    )
+        risk_reward = asset.get(
+            "risk_reward",
+            "-",
+        )
 
-                st.divider()
+        regime = asset.get(
+            "market_regime",
+            "-",
+        )
+
+        grade = asset.get(
+            "confidence_grade",
+            "-",
+        )
+
+        with st.container(border=True):
+
+            left, right = st.columns([3, 1])
+
+            with left:
+
+                st.markdown(f"## {symbol}")
+
+                st.markdown(f"**Decision:** {decision}")
+
+                st.markdown(f"**Market Regime:** {regime}")
+
+            with right:
+
+                st.metric(
+                    "Score",
+                    score,
+                )
+
+            c1, c2, c3 = st.columns(3)
+
+            with c1:
+
+                st.metric(
+                    "ICI",
+                    confidence,
+                )
+
+            with c2:
+
+                st.metric(
+                    "Probability",
+                    f"{probability}%",
+                )
+
+            with c3:
+
+                st.metric(
+                    "Grade",
+                    grade,
+                )
+
+            c4, c5 = st.columns(2)
+
+            with c4:
+
+                st.metric(
+                    "Expected Move",
+                    expected_move,
+                )
+
+            with c5:
+
+                st.metric(
+                    "Holding",
+                    holding,
+                )
+
+            st.metric(
+                "Risk / Reward",
+                risk_reward,
+            )
+
+            st.divider()

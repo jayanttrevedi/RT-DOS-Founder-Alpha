@@ -14,11 +14,23 @@ import yfinance as yf
 class DataProvider:
 
     INDEX_SYMBOLS = {
-        "NIFTY": "^NSEI",
-        "BANKNIFTY": "^NSEBANK",
-        "FINNIFTY": "NIFTY_FIN_SERVICE.NS",
-        "MIDCPNIFTY": "^NSEMDCP50",
-    }
+    "NIFTY": "^NSEI",
+    "BANKNIFTY": "^NSEBANK",
+    "FINNIFTY": "NIFTY_FIN_SERVICE.NS",
+    "MIDCPNIFTY": "^NSEMDCP50",
+}
+
+ALTERNATE_SYMBOLS = {
+    "NIFTY": ["^NSEI"],
+    "BANKNIFTY": ["^NSEBANK"],
+    "FINNIFTY": [
+        "NIFTY_FIN_SERVICE.NS",
+        "^CNXFINSERVICE",
+    ],
+    "MIDCPNIFTY": [
+        "^NSEMDCP50",
+    ],
+}
 
     def get_market_data(self, symbol):
 
